@@ -357,7 +357,11 @@ class Revision extends MorphPivot
         if (is_string($type)) {
             $q->where('revisionable_type', $type);
         } elseif ($type instanceof Model) {
-            $q->where('revisionable_type', get_class($type));
+            if (str_contains(get_class($type), 'Models')) {
+                $q->where('revisionable_type', str_replace("\Models", "", get_class($type)));
+            } else {
+                $q->where('revisionable_type', get_class($type));
+            }
         }
         return $q;
     }
